@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- mybatis map 선언 표시 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+              "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- BBSDaoImpl namespace와 일치해야한다. -->
+<mapper namespace="com.pnu.bbs.dao.BBSDao">
+
+	<!-- 메인에서 게시판 목록 -->
+	<select id="selectMemberList" resultType="map">
+		SELECT gu, dong, result1
+		FROM analysis
+	</select>
+
+	<select id="selectDong" resultType="article"
+		parameterType="String">
+		<!-- parameterType : SQL문 호출시 전달되는 매개변수의 데이터 타입 지정 resultType : 조회되는 한 개의 레코드를 저장 할 곳 -->
+		<!--예전엔 부등호 쓰면 오류가 나서 <![cdata[내용]]> 로 가뒀는데,,,, 이젠 상관 없음 -->
+		<![CDATA[           
+			SELECT gu,dong,result1
+			FROM analysis
+			WHERE dong = #{dong}
+			]]>
+	</select>
+
+	<!-- useGeneratedKeys="true" : Mybatis에서 auto increment 사용 // keyProperty 
+		: 그 컬럼 값 -->
+	<!-- 게시글 등록 -->
+	<insert id="write" parameterType="article">
+		INSERT INTO BBS
+		VALUES(bbs_seq.nextval,#{id},#{title},#{content},0,SYSDATE)
+	</insert>
+
+	<!-- 글 읽기 -->
+	<!-- 받아 들이는 값 내보내는 값 -->
+	<select id="content" parameterType="int" resultType="article">
+		SELECT *
+		FROM BBS
+		WHERE articleNum= #{articleNum}
+	</select>
+
+	<update id="upHit" parameterType="int">
+		UPDATE BBS
+		SET HIT = HIT +
+		1
+		WHERE articleNum= #{articleNum}
+	</update>
+
+
+
+
+</mapper>
